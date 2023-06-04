@@ -16,6 +16,7 @@ target/
 *.crc
 people.parquet/
 people.delta/
+data/
 .cache-main
 .cache-tests
 .cache-main
