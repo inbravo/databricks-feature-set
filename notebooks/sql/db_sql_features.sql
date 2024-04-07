@@ -1,15 +1,48 @@
 -- Databricks notebook source
+SHOW DATABASES;
 
-CREATE TABLE IF NOT EXISTS books AS SELECT * EXCEPT (_rescued_data) FROM read_files('/repo/data/books.csv');
+CREATE DATABASE IF NOT EXISTS lms_bronze LOCATION 'dbfs:/user/hive/warehouse/lms_bronze.db';
+CREATE DATABASE IF NOT EXISTS lms_silver LOCATION 'dbfs:/user/hive/warehouse/lms_silver.db';
+CREATE DATABASE IF NOT EXISTS lms_gold LOCATION 'dbfs:/user/hive/warehouse/lms_gold.db';
+
+DESCRIBE DATABASE lms_silver;
+DESCRIBE DATABASE lms_bronze;
+DESCRIBE DATABASE lms_gold;
+
+DROP DATABASE IF EXISTS lms_bronze CASCADE;
+DROP DATABASE IF EXISTS lms_silver CASCADE;
+DROP DATABASE IF EXISTS lms_gold CASCADE;
 
 -- COMMAND ----------
 
-SELECT country, price FROM books;
+SELECT country, price FROM lms_silver.books;
+
+-- COMMAND ----------
+
+SELECT count(*) FROM lms_silver.books;
+
+-- COMMAND ----------
+
+
+
+-- COMMAND ----------
+
+DESCRIBE FORMATTED lms_silver.books;
+
+-- COMMAND ----------
+
+SELECT * FROM lms_silver.books LIMIT 10;
+
+-- COMMAND ----------
+
+SELECT count(country) FROM lms_silver.books;
+-- SELECT count(distinct(country)) FROM lms_silver.books;
+-- SELECT count(distinct(title)) FROM lms_silver.books;
 
 -- COMMAND ----------
 
 SELECT * FROM (
-  SELECT country, price FROM books
+  SELECT country, price FROM lms_silver.books
 ) PIVOT (
   sum(price) for country in ('France','Germany')
 );
@@ -35,11 +68,11 @@ SELECT *, CASE
    WHEN price > 15 THEN 'expensive' 
    ELSE 'cheap' 
    END
-FROM books;
+FROM dbacademy.books;
 
 -- COMMAND ----------
 
-SELECT * FROM books ORDER BY (CASE 
+SELECT * FROM lms_silver.books ORDER BY (CASE 
    WHEN pages < 500 
    THEN pages 
    ELSE price 
