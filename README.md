@@ -1,17 +1,16 @@
-## Some useful Databricks/ Delta examples
+## This project contains details of Databricks Feature Set
 
+#### Unity Catalog
+- [Unity Catalog Essentials][uc.md]
+
+#### Spark SQL Notes
+- [Databricks SQL Essentials][sql.md]
+  
 #### Delta
-- [Program to show case RDD operations][SparkRDDTest.md]
+- [Program to showcase RDD operations][SparkDeltaTest.md]
 
-[SparkRDDTest.md]: https://github.com/inbravo/databricks-feature-set/blob/master/src/main/scala/com/inbravo/delta/SchemaEvolutionTest.scala
-
-#### Spark
-- [Program to show case RDD operations][SparkRDDTest.md]
-- [Program to show case DataFrame operations][SparkDFTest.md]
-- [Program to show case DataSet operations][SparkDSTest.md]
-
-[SparkRDDTest.md]: https://github.com/inbravo/databricks-feature-set/blob/master/src/main/scala/com/inbravo/spark/SparkRDDTest.scala
-[SparkDFTest.md]: https://github.com/inbravo/databricks-feature-set/blob/master/src/main/scala/com/inbravo/spark/SparkDFTest.scala
-[SparkDSTest.md]: https://github.com/inbravo/databricks-feature-set/blob/master/src/main/scala/com/inbravo/spark/SparkDSTest.scala
+[uc.md]: https://github.com/inbravo/databricks-feature-set/blob/main/notes/uc.md
+[sql.md]: https://github.com/inbravo/databricks-feature-set/blob/main/notes/sql.md
+[SparkDeltaTest.md]: https://github.com/inbravo/databricks-feature-set/blob/master/src/main/scala/com/inbravo/delta/SparkDeltaTest.scala
 
 #### Add in VM params- -Djava.library.path=D:/open-source/hadoop-3.3.0/bin
