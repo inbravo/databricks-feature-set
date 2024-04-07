@@ -1,7 +1,9 @@
 -- Databricks notebook source
+
 CREATE TABLE IF NOT EXISTS books AS SELECT * EXCEPT (_rescued_data) FROM read_files('/repo/data/books.csv');
 
 -- COMMAND ----------
+
 SELECT country, price FROM books;
 
 -- COMMAND ----------
