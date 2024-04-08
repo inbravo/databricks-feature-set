@@ -24,46 +24,53 @@ DESCRIBE DATABASE lms_gold;
 
 -- COMMAND ----------
 
-/* 
-  Select few columns from Silver a Zone table
-*/
+/* Select few columns from Silver a Zone table */
 SELECT COUNTRY, PRICE FROM LMS_SILVER.BOOKS;
 
 -- COMMAND ----------
 
-/* 
-  Get the record count from a Silver Zone table
-*/
+/* Get the record count from a Silver Zone table */
 SELECT COUNT(*) FROM LMS_SILVER.BOOKS;
 
 -- COMMAND ----------
 
-/* 
-  Get the desciption of a Silver Zone table
-*/
+/* Get the desciption of a Silver Zone table */
 DESCRIBE FORMATTED LMS_SILVER.BOOKS;
 
 -- COMMAND ----------
 
-/* 
-  Select top 10 records from a Silver Zone table
-*/
+/* Select top 10 records from a Silver Zone table */
 SELECT * FROM LMS_SILVER.BOOKS LIMIT 10;
 
 -- COMMAND ----------
 
-/* 
-  Select the count of a column from a Silver Zone table
-*/
+/* Select the count of a column from a Silver Zone table */
 SELECT COUNT(COUNTRY) FROM LMS_SILVER.BOOKS;
 -- SELECT COUNT(DISTINCT(COUNTRY)) FROM LMS_SILVER.BOOKS;
 -- SELECT COUNT(DISTINCT(TITLE)) FROM LMS_SILVER.BOOKS;
 
 -- COMMAND ----------
 
-/* 
-  Select the total price from two countries of a Silver Zone table
-*/
+/* "COUNT_IF" to count the records for a certain column value */
+SELECT COUNT_IF(country = 'France') FROM LMS_SILVER.BOOKS;
+
+-- COMMAND ----------
+
+/* "FROM_UNIXTIME" converts the given timestamp to the timestamp in the desired format */
+SELECT FROM_UNIXTIME(PUBLISH_TIME, 'yyyy-MM-dd HH:mm') FROM LMS_SILVER.BOOKS;
+/* "CAST" converts the given timestamp other desired format */
+SELECT CAST(CAST(PUBLISH_TIME AS BIGINT) AS TIMESTAMP) FROM LMS_SILVER.BOOKS;
+/* "YEAR" helps to get the year details out of stored timestamp */
+SELECT * FROM LMS_SILVER.BOOKS WHERE YEAR(FROM_UNIXTIME(PUBLISH_TIME)) > 1900;
+
+-- COMMAND ----------
+
+/* Use of LIKE keyword */
+SELECT * FROM LMS_SILVER.BOOKS WHERE TITLE LIKE '%E%'
+
+-- COMMAND ----------
+
+/* Select the total price from two countries of a Silver Zone table */
 SELECT * FROM (
   SELECT COUNTRY, PRICE FROM LMS_SILVER.BOOKS
 ) PIVOT (
@@ -72,9 +79,7 @@ SELECT * FROM (
 
 -- COMMAND ----------
 
-/* 
-  Create a User Defined Function (UDF)
-*/
+/* Create a User Defined Function (UDF) */
 CREATE OR REPLACE FUNCTION CONVERT_F_TO_C(TEMP DOUBLE)
 RETURNS DOUBLE
 
@@ -126,6 +131,7 @@ CREATE VIEW IF NOT EXISTS VIEW_SPAIN AS SELECT * FROM LMS_SILVER.BOOKS WHERE COU
 /*  
   A Temp View created in one notebook isn't accessible to others 
   TEMP views are visible only to the session that created them and are dropped when the session ends.
+  TEMP views are not materialized views. Read more here- https://community.databricks.com/t5/data-engineering/how-do-temp-views-actually-work/td-p/20136
 */
 CREATE TEMP VIEW IF NOT EXISTS TEMP_SPAIN AS SELECT * FROM LMS_SILVER.BOOKS WHERE COUNTRY = 'SPAIN';
 /* 
