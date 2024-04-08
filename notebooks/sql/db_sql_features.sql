@@ -115,3 +115,25 @@ SELECT * FROM LMS_SILVER.BOOKS ORDER BY (CASE
    THEN PAGES 
    ELSE PRICE 
 END);
+
+-- COMMAND ----------
+
+/* 
+  View is a virtual table that has no physical data based on the result-set of a SQL query
+  "ALTER VIEW" and "DROP VIEW" only change metadata.
+*/
+CREATE VIEW IF NOT EXISTS VIEW_SPAIN AS SELECT * FROM LMS_SILVER.BOOKS WHERE COUNTRY = 'SPAIN';
+/*  
+  A Temp View created in one notebook isn't accessible to others 
+  TEMP views are visible only to the session that created them and are dropped when the session ends.
+*/
+CREATE TEMP VIEW IF NOT EXISTS TEMP_SPAIN AS SELECT * FROM LMS_SILVER.BOOKS WHERE COUNTRY = 'SPAIN';
+/* 
+  If you need to share view across notebooks, use Global Temp View instead 
+  GLOBAL TEMP views are tied to a system preserved temporary schema global_temp.
+*/
+CREATE GLOBAL TEMP VIEW  IF NOT EXISTS VIEW_SPAIN AS SELECT * FROM LMS_SILVER.BOOKS WHERE COUNTRY = 'SPAIN';
+
+-- COMMAND ----------
+
+SELECT * FROM GLOBAL_TEMP.VIEW_SPAIN;
