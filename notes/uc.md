@@ -16,4 +16,14 @@
   - Create of a catalog with managed storage, followed by granting the SELECT privilege on the catalog:<br>
     ```CREATE CATALOG IF NOT EXISTS mycatalog MANAGED LOCATION 's3://depts/finance';```<br>
     ```GRANT SELECT ON mycatalog TO `finance-team`;```
+- Databricks recommends against using DBFS and mounted cloud storage in Unity Catalog-enabled Databricks workspaces. [Best Practices for Unity with DBFS](https://docs.databricks.com/en/dbfs/unity-catalog.html)
+  - Unity Catalog secures access to data in external locations by using full cloud URI paths to identify grants on managed object storage directories.
+  - DBFS mounts use an entirely different data access model that bypasses Unity Catalog entirely.
+  - Databricks recommends that you do not reuse cloud object storage volumes between DBFS mounts and UC external volumes.
+- Each Unity Catalog metastore has an object storage account configured by a Databricks account administrator. Unity Catalog uses this location to store all data and metadata for Unity Catalog-managed tables.
+  -  A storage account used for a Unity Catalog metastore should:
+  -  Be created new for Unity Catalog.
+  -  Have a custom identity policy defined for Unity Catalog.
+  -  Only be accessible with Unity Catalog.
+  -  Only be accessed using the identity access policies created for Unity Catalog.
 
