@@ -1,80 +1,117 @@
 -- Databricks notebook source
+/* 
+  A database is a collection of data objects, such as "TABLES", "VIEWS", and "FUNCTIONS". 
+  In Databricks, the terms SCHEMA and “DATABASE” are used interchangeably.
+  While usage of SCHEMA and DATABASE is interchangeable, SCHEMA is preferred: "CREATE SCHEMA"
+*/
+/* Review the current Databases */
 SHOW DATABASES;
-
+/* Create Databases for medallion architecture based data lake */
 CREATE DATABASE IF NOT EXISTS lms_bronze LOCATION 'dbfs:/user/hive/warehouse/lms_bronze.db';
 CREATE DATABASE IF NOT EXISTS lms_silver LOCATION 'dbfs:/user/hive/warehouse/lms_silver.db';
 CREATE DATABASE IF NOT EXISTS lms_gold LOCATION 'dbfs:/user/hive/warehouse/lms_gold.db';
-
+/* Review the newly created Databases/Schemas */
 DESCRIBE DATABASE lms_silver;
 DESCRIBE DATABASE lms_bronze;
 DESCRIBE DATABASE lms_gold;
-
-DROP DATABASE IF EXISTS lms_bronze CASCADE;
-DROP DATABASE IF EXISTS lms_silver CASCADE;
-DROP DATABASE IF EXISTS lms_gold CASCADE;
-
--- COMMAND ----------
-
-SELECT country, price FROM lms_silver.books;
-
--- COMMAND ----------
-
-SELECT count(*) FROM lms_silver.books;
+/* 
+  To delete a database use following command: "DROP DATABASE"
+  While usage of SCHEMA and DATABASE is interchangeable, SCHEMA is preferred
+*/
+-- DROP DATABASE IF EXISTS lms_bronze CASCADE;
+-- DROP DATABASE IF EXISTS lms_silver CASCADE;
+-- DROP DATABASE IF EXISTS lms_gold CASCADE;
 
 -- COMMAND ----------
 
-
-
--- COMMAND ----------
-
-DESCRIBE FORMATTED lms_silver.books;
-
--- COMMAND ----------
-
-SELECT * FROM lms_silver.books LIMIT 10;
+/* 
+  Select few columns from Silver a Zone table
+*/
+SELECT COUNTRY, PRICE FROM LMS_SILVER.BOOKS;
 
 -- COMMAND ----------
 
-SELECT count(country) FROM lms_silver.books;
--- SELECT count(distinct(country)) FROM lms_silver.books;
--- SELECT count(distinct(title)) FROM lms_silver.books;
+/* 
+  Get the record count from a Silver Zone table
+*/
+SELECT COUNT(*) FROM LMS_SILVER.BOOKS;
 
 -- COMMAND ----------
 
+/* 
+  Get the desciption of a Silver Zone table
+*/
+DESCRIBE FORMATTED LMS_SILVER.BOOKS;
+
+-- COMMAND ----------
+
+/* 
+  Select top 10 records from a Silver Zone table
+*/
+SELECT * FROM LMS_SILVER.BOOKS LIMIT 10;
+
+-- COMMAND ----------
+
+/* 
+  Select the count of a column from a Silver Zone table
+*/
+SELECT COUNT(COUNTRY) FROM LMS_SILVER.BOOKS;
+-- SELECT COUNT(DISTINCT(COUNTRY)) FROM LMS_SILVER.BOOKS;
+-- SELECT COUNT(DISTINCT(TITLE)) FROM LMS_SILVER.BOOKS;
+
+-- COMMAND ----------
+
+/* 
+  Select the total price from two countries of a Silver Zone table
+*/
 SELECT * FROM (
-  SELECT country, price FROM lms_silver.books
+  SELECT COUNTRY, PRICE FROM LMS_SILVER.BOOKS
 ) PIVOT (
-  sum(price) for country in ('France','Germany')
+  SUM(PRICE) FOR COUNTRY IN ('FRANCE','GERMANY')
 );
 
 -- COMMAND ----------
 
-CREATE OR REPLACE FUNCTION convert_f_to_c(temp DOUBLE)
+/* 
+  Create a User Defined Function (UDF)
+*/
+CREATE OR REPLACE FUNCTION CONVERT_F_TO_C(TEMP DOUBLE)
 RETURNS DOUBLE
 
-RETURN (temp - 32) * (5/9);
+RETURN (TEMP - 32) * (5/9);
 
 -- COMMAND ----------
 
-SELECT convert_f_to_c(100);
+/* 
+  Use a User Defined Function (UDF)
+*/
+SELECT CONVERT_F_TO_C(100);
 
 -- COMMAND ----------
 
-DESCRIBE FUNCTION EXTENDED convert_f_to_c;
+/* 
+  Get the details of User Defined Function (UDF)
+*/
+DESCRIBE FUNCTION EXTENDED CONVERT_F_TO_C;
 
 -- COMMAND ----------
 
+/* 
+  Use of case statement on table data
+*/
 SELECT *, CASE 
-   WHEN price > 15 THEN 'expensive' 
-   ELSE 'cheap' 
+   WHEN PRICE > 15 THEN 'EXPENSIVE' 
+   ELSE 'CHEAP' 
    END
-FROM dbacademy.books;
+FROM LMS_SILVER.BOOKS;
 
 -- COMMAND ----------
 
-SELECT * FROM lms_silver.books ORDER BY (CASE 
-   WHEN pages < 500 
-   THEN pages 
-   ELSE price 
+/* 
+  Use of case statement on table data
+*/
+SELECT * FROM LMS_SILVER.BOOKS ORDER BY (CASE 
+   WHEN PAGES < 500 
+   THEN PAGES 
+   ELSE PRICE 
 END);
-
