@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 -- Databricks notebook source
 /* 
   A database is a collection of data objects, such as "TABLES", "VIEWS", and "FUNCTIONS". 
